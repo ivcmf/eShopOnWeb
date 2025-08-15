@@ -13,9 +13,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NimblePros.Metronome;
-using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// The following line enables Application Insights telemetry collection.
+builder.Services.AddApplicationInsightsTelemetry();
 
 // Add service defaults & Aspire components.
 builder.AddAspireServiceDefaults();
