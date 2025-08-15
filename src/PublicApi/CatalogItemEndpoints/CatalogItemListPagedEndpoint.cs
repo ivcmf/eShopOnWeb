@@ -31,8 +31,9 @@ public class CatalogItemListPagedEndpoint(
 
     public override async Task<ListPagedCatalogItemResponse> ExecuteAsync(ListPagedCatalogItemRequest request, CancellationToken ct)
     {
+
         await Task.Delay(1000, ct);
-       
+
         var response = new ListPagedCatalogItemResponse(request.CorrelationId());
 
         var filterSpec = new CatalogFilterSpecification(request.CatalogBrandId, request.CatalogTypeId);
@@ -51,7 +52,15 @@ public class CatalogItemListPagedEndpoint(
             "Returned {Count} catalog items from database (totalItems={Total}, pageIndex={PageIndex}, pageSize={PageSize})",
             items.Count, totalItems, request.PageIndex, request.PageSize);
 
-        throw new Exception("Cannot move further");
+        try
+        {
+            throw new Exception("Cannot move further");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error in CatalogItemListPagedEndpoint");
+            throw;
+        }
 
         response.CatalogItems.AddRange(items.Select(mapper.Map<CatalogItemDto>));
         foreach (CatalogItemDto item in response.CatalogItems)
@@ -61,14 +70,15 @@ public class CatalogItemListPagedEndpoint(
 
         if (request.PageSize > 0)
         {
-            response.PageCount = (int) Math.Ceiling((decimal)totalItems / request.PageSize);
+            response.PageCount = (int)Math.Ceiling((decimal)totalItems / request.PageSize);
         }
         else
         {
             response.PageCount = totalItems > 0 ? 1 : 0;
         }
 
-    
+
         return response;
     }
+
 }
