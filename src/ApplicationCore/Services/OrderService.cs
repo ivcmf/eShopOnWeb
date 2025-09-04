@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using MediatR;
@@ -18,17 +19,22 @@ public class OrderService : IOrderService
     private readonly IRepository<Basket> _basketRepository;
     private readonly IRepository<CatalogItem> _itemRepository;
     private readonly IMediator _mediator;
+    private readonly IOrderItemsReserver _orderItemsReserver;
 
     public OrderService(IRepository<Basket> basketRepository,
         IRepository<CatalogItem> itemRepository,
         IRepository<Order> orderRepository,
-        IUriComposer uriComposer, IMediator mediator)
+        IUriComposer uriComposer, 
+        IMediator mediator,
+        IOrderItemsReserver orderItemsReserver
+        )
     {
         _orderRepository = orderRepository;
         _uriComposer = uriComposer;
         _basketRepository = basketRepository;
         _itemRepository = itemRepository;
         _mediator = mediator;
+        _orderItemsReserver = orderItemsReserver;
     }
 
     public async Task CreateOrderAsync(int basketId, Address shippingAddress)
@@ -55,5 +61,7 @@ public class OrderService : IOrderService
         await _orderRepository.AddAsync(order);
         OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(order);
         await _mediator.Publish(orderCreatedEvent);
+
+        await _orderItemsReserver.SendAsync(order);
     }
 }
