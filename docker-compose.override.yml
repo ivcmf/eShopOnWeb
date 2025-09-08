@@ -4,6 +4,7 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Docker
      - ASPNETCORE_URLS=http://+:8080
+     - UseOnlyInMemoryDatabase=True
    ports:
      - "5106:8080"
    volumes:
@@ -13,8 +14,8 @@ services:
    environment:
      - ASPNETCORE_ENVIRONMENT=Docker
      - ASPNETCORE_URLS=http://+:8080
+     - UseOnlyInMemoryDatabase=True
    ports:
      - "5200:8080"
    volumes:
      - ~/.aspnet/https:/root/.aspnet/https:ro
-     - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
