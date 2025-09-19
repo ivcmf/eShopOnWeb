@@ -14,17 +14,17 @@ param location string
 //      "value": "myGroupName"
 // }
 param resourceGroupName string = ''
-param webServiceName string = ''
+
+param webServiceName string = 'app-eshop-web'
 param catalogDatabaseName string = 'catalogDatabase'
 param catalogDatabaseServerName string = ''
 param identityDatabaseName string = 'identityDatabase'
 param identityDatabaseServerName string = ''
-param appServicePlanName string = ''
-param keyVaultName string = ''
+param appServicePlanName string = 'plan-eshop-final'
+param keyVaultName string = 'kv-eshop-final'
 
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
-
 @secure()
 @description('SQL Server administrator password')
 param sqlAdminPassword string
